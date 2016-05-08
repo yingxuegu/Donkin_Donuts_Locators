@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset=utf-8 />
+    <title>Esri Leaflet Debugging Sample</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <!-- Load Leaflet from CDN-->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <!-- Load Esri Leaflet from source-->
+    <script src="../src/EsriLeaflet.js"></script>
+    <script src="../src/Request.js"></script>
+    <script src="../src/Util.js"></script>
+    <script src="../src/Controls/Logo.js"></script>
+
+    <script src="../src/Services/Service.js"></script>
+    <script src="../src/Services/FeatureLayerService.js"></script>
+    <script src="../src/Services/ImageService.js"></script>
+    <script src="../src/Services/MapService.js"></script>
+
+    <script src="../src/Layers/FeatureLayer/FeatureGrid.js"></script>
+    <script src="../src/Layers/FeatureLayer/FeatureManager.js"></script>
+    <script src="../src/Layers/FeatureLayer/FeatureLayer.js"></script>
+
+    <script src="../src/Layers/RasterLayer.js"></script>
+    <script src="../src/Layers/ImageMapLayer.js"></script>
+    <script src="../src/Layers/TiledMapLayer.js"></script>
+    <script src="../src/Layers/BasemapLayer.js"></script>
+    <script src="../src/Layers/DynamicMapLayer.js"></script>
+
+    <script src="../src/Tasks/Task.js"></script>
+    <script src="../src/Tasks/Find.js"></script>
+    <script src="../src/Tasks/Identify.js"></script>
+    <script src="../src/Tasks/IdentifyFeatures.js"></script>
+    <script src="../src/Tasks/IdentifyImage.js"></script>
+    <script src="../src/Tasks/Query.js"></script>
+
+    <style>
+      body {
+        margin:0;
+        padding:0;
+      }
+    </style>
+  </head>
+  <body>
+
+  <!--div id="map"></div-->
+  <script>
+     //make login box
+function makeLoginBox() {
+  var loginDiv = document.createElement('div');
+  loginDiv.id = 'loginbox';
+  loginDiv.innerHTML = "<center><b>Login</b></center><form id=\"l-form\" name=\"login-form\">Username<br><input name=\"username\" value=\"user1\"/><br>Password<br><input name=\"password\" type=\"password\" value=\"user1\"/><br><input type=\"submit\" id=\"login-btn\" value=\"login\"/></form>";
+  var mapDiv = document.getElementById('map');
+  document.body.insertBefore(loginDiv, mapDiv);
+  };
+makeLoginBox() //insert into DOM
+
+//retrieve credentials
+function getCredentials() {
+  var x = document.getElementById('l-form');
+  var authN = x.elements[0].value;
+  var authP = x.elements[1].value;
+  return [authN, authP]
+  };
+
+//validate supplied credentials & load app if valid
+function validateCred(){
+  var cred = getCredentials();
+  if (cred[0].length === 0 || cred[1].length === 0) {
+    alert("Username and Password are required!");
+    }
+  else {
+    //remove loginbox if credentials valid
+    var body = document.getElementsByTagName('body');
+    var loginbox = document.getElementById('loginbox');
+    body[0].removeChild(loginbox);
+    //add credentials to server request
+    function serverAuth (callback) {
+      L.esri.post('http://sampleserver6.arcgisonline.com/arcgis/tokens/generateToken', {
+        username: cred[0],
+        password: cred[1],
+        f: 'json',
+        expiration: 6, //minutes
+        client: 'referer',
+        referer: window.location.origin},
+        callback);
+      };
+    //send request
+    serverAuth(function (error, response) {
+      console.log(error);
+      console.log(response);
+    });
+  }
+}
+//attached validate function to login button
+var loginSubmit = document.getElementById("login-btn");
+loginSubmit.onclick = validateCred;
+  </script>
+
+  </body>
+  </html>

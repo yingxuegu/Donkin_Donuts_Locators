@@ -1,0 +1,21 @@
+{
+  "name": "donkin_donuts_locator",
+  "version": "1.0.0",
+  "description": "It is a web application about dokin donuts location",
+  "dependencies": {
+    "esri-leaflet": "^2.0.0",
+    "googlemaps": "^1.4.0"
+  },
+  "devDependencies": {
+    "angular": "^1.5.5",
+    "angular-leaflet-directive": "^0.10.0",
+    "angular-ui-bootstrap": "^1.3.2",
+    "jquery": "^2.2.3",
+    "leaflet-plugins": "^1.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Xueying Gu",
+  "license": "ISC"
+}
