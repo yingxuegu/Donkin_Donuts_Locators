@@ -40,21 +40,68 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
+            <ul class="sidebar-nav" >
                 <li class="sidebar-brand">
                     <a href="#">
                         Donkin's Donuts Locators
                     </a>
                 </li>
 
-                <div ng-controller="CollapseDemoCtrl">
-                    <li ng-click="isCollapsed = !isCollapsed">
+                <div ng-controller="CollapseDemoCtrl" class="row">
+                    <li class="search" ng-click="isCollapsed = !isCollapsed">
                         <a href="#">Search</a>
                     </li>
-                    <div uib-collapse="isCollapsed">
-                        <div class="">Some content</div>
+                    <div uib-collapse="isCollapsed" class="col-md-12 col-lg-12 search_panel">
+                      <div class="row">  
+                        <div class="col-md-12 col-lg-12">
+                            <div class="input-group">
+                              <input type="text" class="form-control" placeholder="Input Zip Code">
+                              <span class="input-group-btn">
+                                <button class="btn btn-success" type="button">Search</button>
+                              </span>
+                            </div><!-- /input-group -->
+                        </div>
+                     </div><!-- /row -->   
+
+                     <br>
+                        <!--drop down for distance-->
+                      <div class="row">  
+                        <div class="dropdown col-md-12  col-lg-12">
+                          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Search Radius
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li>5 miles</li>
+                            <li>10 miles</li>
+                            <li>20 miles</li>
+                            <li>30 miles</li>
+                          </ul>
+                        </div><!-- /dropdown -->  
+                      </div> <!-- /row --> 
+                     <br> 
+                      <!-- Only Show Restaurants with -->                        
+                      <div class="row col-md-12  col-lg-12">
+                        <div >
+                          <label class="style">Only Show Restaurants with</label>
+                        </div>
+                        <div class="checkbox">
+                          <label class="style"><input type="checkbox" value="">Wifi</label>
+                        </div>
+                        <div class="checkbox">
+                          <label class="style"><input type="checkbox" value="">Drive Through</label>
+                        </div>
+                        <div class="checkbox">
+                          <label class="style"><input type="checkbox" value="">24 Hours</label>
+                        </div>
+                        <div class="checkbox">
+                          <label class="style"><input type="checkbox" value="">Full Menu</label>
+                        </div>
+                      </div> 
                     </div>
                 </div>
+
+
 
                 <li>
                     <a href="#">Polyon Map</a>

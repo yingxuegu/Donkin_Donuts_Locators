@@ -7,6 +7,14 @@ dd.controller('CollapseDemoCtrl', function ($scope) {
 
 
 dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", function($scope, $http) {
+
+            //get ip address by jquery
+            $.get("http://ipinfo.io", function(response) {
+                    $scope.ip = response.ip;
+                    //alert($scope.ip);
+                    $scope.searchIP($scope.ip);
+                }, "jsonp");
+
             var ddIcon = {
                     iconUrl: 'DD_Store.png',
                     iconSize: [50, 50], // size of the icon
@@ -55,11 +63,23 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", fu
               });
             };
 
-            angular.extend($scope, {
+            //get cilent geo location by ip
+            $scope.searchIP = function(ip) {
+                var url = "http://freegeoip.net/json/" + ip;
+                $http.get(url).success(function(res) {
+                    $scope.clientLon = res.longitude;
+                    $scope.clientLat = res.latitude;
+                    //after get the address of client, then reload
+                    $scope.init();
+                });
+            };
+
+            $scope.init = function() {
+              angular.extend($scope, {
                 center: {
-                    lat: 43.6545185,
-                    lng: -70.2664312,
-                    zoom: 11
+                    lat: $scope.clientLat,
+                    lng: $scope.clientLon,
+                    zoom: 10
                 },
                 events: {
                     map: {
@@ -88,9 +108,14 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", fu
                     }
                 }
             });
+            } ; 
+
+            $scope.init();
+
+
 
             $http.get("dunkin_donuts_valued.geojson").success(function(data) {
-                console.log(data.features);
+               // console.log(data.features);
                 var features = data.features;
                 $scope.markers = addressPointsToMarkers(features);
             });
