@@ -2,27 +2,21 @@
 <html lang="en" ng-app="ddLocators">
 
 <head>
-
     <meta charset="utf-8">
     <link rel="shortcut icon" href="./img/DD_Coffee.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>Donkin's Donuts</title>
-
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
-
     <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="bower_components/leaflet.markercluster/dist/MarkerCluster.Default.css" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -31,13 +25,9 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
 </head>
-
 <body>
-
     <div id="wrapper">
-
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav" >
@@ -46,8 +36,7 @@
                         Donkin's Donuts Locators
                     </a>
                 </li>
-
-                <div ng-controller="CollapseDemoCtrl" class="row">
+                <div ng-controller="SearchController" class="row">
                     <li class="search" ng-click="isCollapsed = !isCollapsed">
                         <a href="#">Search</a>
                     </li>
@@ -55,9 +44,9 @@
                       <div class="row">  
                         <div class="col-md-12 col-lg-12">
                             <div class="input-group">
-                              <input type="text" class="form-control" placeholder="Input Zip Code">
+                              <input type="text" class="form-control" placeholder="Input Zip Code" ng-model="address">
                               <span class="input-group-btn">
-                                <button class="btn btn-success" type="button">Search</button>
+                                <button class="btn btn-success" type="button" ng-click="search()">Search</button>
                               </span>
                             </div><!-- /input-group -->
                         </div>
@@ -67,7 +56,7 @@
                         <!--drop down for distance-->
                       <div class="row">  
                         <div class="dropdown col-md-12  col-lg-12">
-                          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
                             Search Radius
                             <span class="caret"></span>
                           </button>
@@ -86,16 +75,19 @@
                           <label class="style">Only Show Restaurants with</label>
                         </div>
                         <div class="checkbox">
-                          <label class="style"><input type="checkbox" value="">Wifi</label>
+                          <label class="style">
+                            <input type="checkbox" ng-model="wifiConfirmed" ng-change=featureChanged()>
+                            Wifi
+                          </label>
                         </div>
                         <div class="checkbox">
-                          <label class="style"><input type="checkbox" value="">Drive Through</label>
+                          <label class="style"><input type="checkbox" ng-model="drivethroughConfirmed" ng-change=featureChanged()>Drive Through</label>
                         </div>
                         <div class="checkbox">
-                          <label class="style"><input type="checkbox" value="">24 Hours</label>
+                          <label class="style"><input type="checkbox" ng-model="fulldayConfirmed" ng-change=featureChanged()>24 Hours</label>
                         </div>
                         <div class="checkbox">
-                          <label class="style"><input type="checkbox" value="">Full Menu</label>
+                          <label class="style"><input type="checkbox" ng-model="fullmenuConfirmed" ng-change=featureChanged()>Full Menu</label>
                         </div>
                       </div> 
                     </div>
@@ -150,18 +142,14 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="node_modules/angular/angular.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+    <!--<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>-->
     <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>-->
-    <script src="node_modules/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
-    <script src="node_modules/leaflet-plugins/layer/Icon.Canvas.js"></script>
-    
-
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
     <script src="bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
     <script src="bower_components/leaflet-plugins/layer/Icon.Canvas.js"></script>
     <script src="bower_components/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <script src="node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
 
 
     <script src="app.js"></script>

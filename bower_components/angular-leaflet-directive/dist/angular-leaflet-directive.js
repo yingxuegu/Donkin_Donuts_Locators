@@ -4741,7 +4741,7 @@ angular.module('leaflet-directive').directive('markers',
       var _destroy = function(markerModels, oldMarkerModels, lMarkers, map, layers) {
         _seeWhatWeAlreadyHave(markerModels, oldMarkerModels, lMarkers, false,
             function(newMarker, oldMarker, lMarkerName) {
-              $log.debug(errorHeader + '[marker] is deleting marker: ' + lMarkerName);
+              //$log.debug(errorHeader + '[marker] is deleting marker: ' + lMarkerName);
               deleteMarker(lMarkers[lMarkerName], map, layers);
               delete lMarkers[lMarkerName];
             });
@@ -4751,7 +4751,7 @@ angular.module('leaflet-directive').directive('markers',
         var skips = {};
         _seeWhatWeAlreadyHave(newModels, oldModels, lMarkers, true,
             function(newMarker, oldMarker, lMarkerName) {
-              $log.debug(errorHeader + '[marker] is already rendered, marker: ' + lMarkerName);
+             // $log.debug(errorHeader + '[marker] is already rendered, marker: ' + lMarkerName);
               skips[lMarkerName] = newMarker;
             });
 
@@ -5160,7 +5160,7 @@ angular.module('leaflet-directive')
 
   var EventsHelper = function(rootBroadcastName, lObjectType) {
     this.rootBroadcastName = rootBroadcastName;
-    $log.debug('LeafletEventsHelpersFactory: lObjectType: ' + lObjectType + 'rootBroadcastName: ' + rootBroadcastName);
+    //$log.debug('LeafletEventsHelpersFactory: lObjectType: ' + lObjectType + 'rootBroadcastName: ' + rootBroadcastName);
 
     //used to path/key out certain properties based on the type , "markers", "geojson"
     this.lObjectType = lObjectType;
@@ -5195,7 +5195,7 @@ angular.module('leaflet-directive')
 
     return function(e) {
       var broadcastName = _this.rootBroadcastName + maybeMapId + '.' + eventName;
-      $log.debug(broadcastName);
+      //$log.debug(broadcastName);
       _this.fire(leafletScope, broadcastName, logic, e, e.target || lObject, model, name, layerName, extra);
     };
   };
@@ -5517,7 +5517,7 @@ angular.module('leaflet-directive')
   var EventsHelper = LeafletEventsHelpersFactory;
 
   var MarkerEvents = function() {
-      EventsHelper.call(this, 'leafletDirectiveMarker', 'markers');
+      //EventsHelper.call(this, 'leafletDirectiveMarker', 'markers');
     };
 
   MarkerEvents.prototype = new EventsHelper();
@@ -5529,7 +5529,7 @@ angular.module('leaflet-directive')
       // Broadcast old marker click name for backwards compatibility
       if (eventName === 'click') {
         safeApply(leafletScope, function() {
-          $rootScope.$broadcast('leafletDirectiveMarkersClick', name);
+          //$rootScope.$broadcast('leafletDirectiveMarkersClick', name);
         });
       } else if (eventName === 'dragend') {
         safeApply(leafletScope, function() {
