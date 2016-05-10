@@ -51,8 +51,8 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
             $scope.searchIP = function(ip) {
                 var url = "http://freegeoip.net/json/" + ip;
                 $http.get(url).success(function(res) {
-                    $scope.clientLon = res.longitude;
-                    $scope.clientLat = res.latitude;
+                    sharedService.searchLng = res.longitude;
+                    sharedService.searchLat = res.latitude;
                     //after get the address of client, then reload
                     $scope.init();
                 });
@@ -61,8 +61,8 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
             $scope.init = function() {
               angular.extend($scope, {
                 center: {
-                    lat: $scope.clientLat,
-                    lng: $scope.clientLon,
+                    lat: sharedService.searchLat,
+                    lng: sharedService.searchLng,
                     zoom: 10
                 },
                 events: {
@@ -93,19 +93,33 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
                 }
             });
             }; 
-            $scope.init();
+            
             console.log("check shared data: " + sharedService.haha);
+
+
             $scope.$on('search', function() {
+               $scope.init();
                console.log("receive search message");
+               console.log("reload: " + sharedService.searchLat + " " + sharedService.searchLng);
+               //$scope.init();
             }); 
+
+
 
             var featureFilter = function (feature) {
                 //console.log("yes");
                 //console.log(feature.properties.wifi);
+                var distanceLimitation = true;
                 var wifi = true;
                 var fullday = true;
                 var fullmenu = true;
                 var drivethrough = true;
+                var ddlat ;
+                var ddlng ;
+                var distance;
+                var centerLat = 45.761603;
+                var centerLng = -68.4421806;
+
                 if(sharedService.wifi === true) {
                     wifi = (feature.properties.wifi >= 0.1);
                 }
@@ -118,8 +132,16 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
                 if(sharedService.fullmenu === true) {
                     fullmenu = (feature.properties.fullmenu >= 0.6);
                 }
+                ddlat = feature.geometry.coordinates[1];
+                ddlng = feature.geometry.coordinates[0];
+                distance = google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(centerLat,centerLng), 
+                    new google.maps.LatLng(ddlat,ddlng)) * 0.000621371; 
 
-                return wifi && fullmenu && fullday && drivethrough;
+                if(distance > 100) {
+                    distanceLimitation = false;
+                }
+
+                return wifi && fullmenu && fullday && drivethrough && distanceLimitation;
             };
 
             $scope.$on('change', function() {
@@ -137,8 +159,10 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
 
             $scope.features = null;
 
+            $scope.init();
+
             $http.get("dunkin_donuts_valued.geojson").success(function(data) {
-                //console.log(data.features);
+                console.log(data.features);
                 sharedService.features = data.features;
                 //console.log("original type: " + typeof sharedService.features);
                 $scope.markers = addressPointsToMarkers(sharedService.features);
@@ -168,6 +192,7 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
         return sharedService;
     });
 
+
     dd.controller('SearchController', ["$scope", "$http", "mySharedService", 
         function($scope, $http, sharedService){
             $scope.isCollapsed = true;
@@ -178,7 +203,9 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
             $scope.drivethroughConfirmed = false;
             $scope.search = function () {
                 //console.log("hit search button");
-                sharedService.prepForBroadcast("search");
+                var geocoder = new google.maps.Geocoder();
+                geocodeAddress(geocoder);
+                
             };
             $scope.featureChanged = function() {
                 //console.log("change wifi comfirm data");
@@ -188,6 +215,23 @@ dd.controller("MarkersClustering10000MarkersController", [ "$scope", "$http", "m
                 sharedService.drivethrough = $scope.drivethroughConfirmed;
                 sharedService.prepForBroadcast("change");
             };
+
+            
+            var geocodeAddress = function(geocoder) {
+                var address = $scope.address;
+                geocoder.geocode({'address': address}, function(results, status) {
+                  if (status === google.maps.GeocoderStatus.OK) {
+                    sharedService.searchLat = results[0].geometry.location.lat();
+                    sharedService.searchLng = results[0].geometry.location.lng();
+                    console.log(results[0].geometry.location.lat());
+                    console.log(results[0].geometry.location.lng());
+                    sharedService.prepForBroadcast("search");
+                  } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                  }
+                });
+            };
+            
     }]);
 
 

@@ -4715,7 +4715,7 @@ angular.module('leaflet-directive').directive('markers',
         var doCheckOldModel =  isDefined(oldMarkerModels);
         for (var name in lMarkers) {
           if (!hasLogged) {
-            $log.debug(errorHeader + '[markers] destroy: ');
+            //$log.debug(errorHeader + '[markers] destroy: ');
             hasLogged = true;
           }
 
