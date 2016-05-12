@@ -1,251 +1,111 @@
 <!DOCTYPE html>
 <html ng-app="demoapp">
-<head>
+  <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/angular/angular.min.js"></script>
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
-    <script src="node_modules/dist/esri-leaflet.js"></script>
-    
-    <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>-->
-    <script src="node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/density_map.css"/>
     <script>
         var app = angular.module("demoapp", ["leaflet-directive"]);
-        app.controller("LayersEsriFeatureLayerController", [ "$scope", function($scope) {
+        app.controller('DensityMapController', [ "$scope", "$http", function($scope, $http) {
+
+            $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
+                stateMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
+            });
+
+            $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
+                stateClick(leafletPayload.leafletObject, leafletPayload.leafletEvent);
+            });
+
             angular.extend($scope, {
-                layercontrol: {
-                    icons: {
-                      uncheck: "fa fa-toggle-off",
-                      check: "fa fa-toggle-on"
-                    }
+                center: {
+                    lat: 39.1232189,
+                    lng: -94.8882723,
+                    zoom: 4
                 },
-                porland: {
-	            	lat: 45.526,
-	                lng: -122.667,
-	                zoom: 14
-	            },
-                layers: {
-                    baselayers: {
-				    	streets: {
-					    	name: "Streets",
-					        type: "agsBase",
-					        layer: "Streets",
-					        visible: false
-				    	}
-                    },
-                    overlays: {
-                        simple: {
-                            name: "Simple",
-                            type: "agsFeature",
-                            url: "https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Heritage_Trees_Portland/FeatureServer/0",
-                            visible: true,
-                            group: "Test"
-                        },
-                        points: {
-                            name: "Styling Points",
-                            type: "agsFeature",
-                            url: "https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Trimet_Transit_Stops/FeatureServer/0",
-                            visible: false,
-                            layerOptions: {
-                                pointToLayer: function (geojson, latlng) {
-                                    if(geojson.properties.direction) {
-                                        return L.marker(latlng, {
-                                            icon: $scope.busIcons[geojson.properties.direction.toLowerCase()]
-                                        });
-                                    } else {
-                                        return L.marker(latlng);
-                                    }
-                                }
-                            },
-                            group: "Test"
-                        },
-                        lines: {
-                            name: "Styling Lines",
-                            type: "agsFeature",
-                            url: "http://services.arcgis.com/uCXeTVveQzP4IIcx/ArcGIS/rest/services/Bike_Routes/FeatureServer/0",
-                            visible: false,
-                            layerOptions: {
-                                style: function (feature) {
-                                    var c,o = 0.75;
-                                    switch (feature.properties.BIKEMODE) {
-                                        case "Low traffic through street":
-                                            c = "#007D7D";
-                                            break;
-                                        case "Bike boulevard":
-                                            c = "#00FF3C";
-                                            break;
-                                        case "Caution area":
-                                            c = "#FF0000";
-                                            break;
-                                        case "Local multi-use path":
-                                            c = "#00BEFF";
-                                            break;
-                                        case "Regional multi-use path":
-                                            c = "#b1a9d0";
-                                            break;
-                                        case "Moderate traffic through street":
-                                            c = "#FFEB00";
-                                            break;
-                                        case "Planned multi-use path":
-                                            c = "#000000";
-                                            break;
-                                        case "Bike lane":
-                                            c = "#328000";
-                                            o = "0.70";
-                                        break;
-                                        case "High traffic through street":
-                                            c = "#FFA500";
-                                            break;
-                                        case "Planned bike lane":
-                                            c = "#000000";
-                                            o = "1.0";
-                                            break;
-                                        default:
-                                            c = "#C0C0C0";
-                                    }
-                                    return {color: c, opacity: o, weight: 5};
-                                }
-                            },
-                            group: "Test"
-                        },
-                        polygons: {
-                            name: "Styling Polygons",
-                            type: "agsFeature",
-                            url: "http://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Congressional_Districts/FeatureServer/0",
-                            visible: false,
-                            layerOptions: {
-                                simplifyFactor: 0.5,
-                                precision: 5,
-                                style: function (feature) {
-                                    if(feature.properties.PARTY === "Democrat"){
-                                        return {color: "blue", weight: 2 };
-                                    } else if(feature.properties.PARTY === "Republican"){
-                                        return { color: "red", weight: 2 };
-                                    } else {
-                                        return { color: "white", weight: 2 };
-                                    }
-                                }
-                            },
-                            group: "Test"
-                        },
-
-                        group: {
-                            name: "Grouped",
-                            type: "group",
-                            layerOptions: {
-                                layers: [{
-                                    name: "Simple",
-                                    type: "agsFeature",
-                                    url: "https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Heritage_Trees_Portland/FeatureServer/0",
-                                    visible: true,
-                                    group: "Test"
-                                }, {
-                                    name: "Styling Points",
-                                    type: "agsFeature",
-                                    url: "https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Trimet_Transit_Stops/FeatureServer/0",
-                                    visible: false,
-                                    layerOptions: {
-                                        pointToLayer: function (geojson, latlng) {
-                                            if(geojson.properties.direction) {
-                                                return L.marker(latlng, {
-                                                    icon: $scope.busIcons[geojson.properties.direction.toLowerCase()]
-                                                });
-                                            } else {
-                                                return L.marker(latlng);
-                                            }
-                                        }
-                                    }
-                                }]
-                            }
-
-                        }
-                    }
-                },
-
-                busIcons: {
-                    north: L.icon({
-                        iconUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-north.png",
-                        iconRetinaUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-north@2x.png",
-                        iconSize: [27, 31],
-                        iconAnchor: [13.5, 17.5],
-                        popupAnchor: [0, -11],
-                    }),
-                    south: L.icon({
-                        iconUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-south.png",
-                        iconRetinaUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-south@2x.png",
-                        iconSize: [27, 31],
-                        iconAnchor: [13.5, 13.5],
-                        popupAnchor: [0, -11],
-                    }),
-                    east: L.icon({
-                        iconUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-east.png",
-                        iconRetinaUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-east@2x.png",
-                        iconSize: [31, 27],
-                        iconAnchor: [13.5, 17.5],
-                        popupAnchor: [0, -11],
-                    }),
-                    west: L.icon({
-                        iconUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-west.png",
-                        iconRetinaUrl: "http://esri.github.io/esri-leaflet/img/bus-stop-west@2x.png",
-                        iconSize: [31, 27],
-                        iconAnchor: [17.5, 13.5],
-                        popupAnchor: [0, -11],
-                    })
+                legend: {
+                    colors: [ '#bd0026', '#f03b20', '#fd8d3c', '#fecc5c', '#ffffb2', '#fff' ],
+                    labels: [ '10000', '50000', '1000000', '100000000', '50000000', 'none' ]
                 }
+            });
+
+
+
+            function stateClick(country, event) {
+                country = country.feature;
+                console.log(country.properties.name);
+            }
+
+            // Get a state paint color from 
+            function getColor(density) {
+                if(density < 10000) {
+                    return "#bd0026";
+                }else if (density >= 10000 && density < 50000){
+                    return "#f03b20";
+                }else if (density >= 50000 && density < 1000000){
+                    return "#fd8d3c";
+                }else if (density >= 100000 && density < 10000000){
+                    return "#fecc5c";
+                }else if (density >= 1000000 && density < 500000000){
+                    return "#ffffb2";
+                }
+                return "#FFF";
+            }
+
+            function style(feature) {
+               // console.log("feature: " + feature.properties.name);
+                return {
+                    fillColor: getColor(feature.properties.density),
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            }
+
+            // Mouse over function, called from the Leaflet Map Events
+            function stateMouseover(feature, leafletEvent) {
+                var layer = leafletEvent.target;
+                layer.setStyle({
+                    weight: 2,
+                    color: '#666',
+                    fillColor: 'blue'
+                });
+                layer.bringToFront();
+                $scope.selectedState = feature;
+                if($scope.selectedState.properties.density) {
+                    $scope.selectedState.properties.densityDetail = $scope.selectedState.properties.density + " person have one Donkin's Donuts store";
+                }else {
+                     $scope.selectedState.properties.densityDetail = "No Store in this state";
+                }
+                console.log(feature);
+            }
+
+            // Get the states geojson data from a JSON
+            $http.get("us-states.geojson").success(function(data, status) {
+                angular.extend($scope, {
+                    geojson: {
+                        data: data,
+                        style: style,
+                        resetStyleOnMouseout: true
+                    },
+                        selectedState: {}
+                });
             });
         }]);
     </script>
-</head>
-<body ng-controller="LayersEsriFeatureLayerController">
-    <style>
-        .angular-leaflet-control-layers {
-            position: absolute;
-            background: white;
-            z-index: 100;
-            left: 10px;
-            top: 100px;
-            width: 200px;
-            box-shadow: 1px 1px 5px #333;
-            padding: 5px;
-        }
-
-        .angular-leaflet-control-layers .lf-row label {
-            cursor: pointer;
-            width: 75%;
-        }
-
-        .angular-leaflet-control-layers .lf-row .lf-icon-ol {
-            padding-left: 8px;
-        }
-
-        .angular-leaflet-control-layers .lf-row .lf-icon {
-            cursor: pointer;
-            float: left;
-            margin-right: 5px;
-            padding-top: 2px;
-        }
-
-        .angular-leaflet-control-layers .lf-row label .lf-text {
-            float: left;
-        }
-
-        .angular-leaflet-control-layers .lf-row .lf-icon-ol-group {
-            color: #00650a;
-        }
-
-        .angular-leaflet-control-layers .lf-row .lf-icons {
-            float: right;
-        }
-    </style>
-    <leaflet lf-center="porland" layers="layers" width="100%" height="480px">
-        <layercontrol order="normal" icons="layercontrol.icons" auto-hide-opacity="true" show-groups="false"
-            title="Layer Manager" base-title="Base Layers" overlays-title="Overlays Layers"></layercontrol>
-    </leaflet>
-    <h1>Esri ArcGIS Feature Layer</h1>
-    <p>Use the Layer Switch Control on the top rigth of the map to show another Esri Feature Layers.</p>
-</body>
+ 
+  </head>
+  <body ng-controller="DensityMapController">
+      <leaflet lf-center="center" events="events" legend="legend" height="800px" geojson="geojson"></leaflet>
+      <div class="worldmap country f32">
+        <div ng-show="selectedState"></div>
+        {{ selectedState.properties.name || 'No State Name'}}
+        <br>
+        {{ selectedState.properties.densityDetail}}
+      </div>
+  </body>
 </html>

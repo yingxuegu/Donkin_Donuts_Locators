@@ -19,8 +19,8 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
         var address = sharedService.address;
         geocoder.geocode({'address': address}, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
-            sharedService.searchLat = results[0].geometry.location.lat();
-            sharedService.searchLng = results[0].geometry.location.lng();
+            $scope.center.lat = results[0].geometry.location.lat();
+            $scope.center.lng = results[0].geometry.location.lng();
             console.log(results[0].geometry.location.lat());
             console.log(results[0].geometry.location.lng());        
             } else {
@@ -71,28 +71,28 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
         $scope.searchIP = function(ip) {
             var url = "http://freegeoip.net/json/" + ip;
             $http.get(url).success(function(res) {
-            sharedService.searchLng = res.longitude;
-            sharedService.searchLat = res.latitude;
+            $scope.center.lng = res.longitude;
+            $scope.center.lat = res.latitude;
             //after get the address of client, then reload
-            $scope.init();
+            //$scope.init();
             });
+        };
+
+        $scope.changeLocation = function() {
+                $scope.center.lat = 45;
+                $scope.center.lng = 10;
         };
         //initialize map 
         $scope.init = function() {
               angular.extend($scope, {
                 center: {
-                    lat: sharedService.searchLat,
-                    lng: sharedService.searchLng,
+                    lat: 43.657284, 
+                    lng: -70.268753,
                     zoom: 10
                 },
-                events: {
-                    map: {
-                        enable: ['moveend', 'popupopen'],
-                        logic: 'emit'
-                    },
-                    marker: {
-                        enable: [],
-                        logic: 'emit'
+                controls: {
+                    fullscreen: {
+                        position: 'topleft'
                     }
                 },
                 layers: {
@@ -142,7 +142,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
                     fullmenu = (feature.properties.fullmenu >= 0.6);
                 }
                 //Calculate distance between center point and other point
-                var centerPoint  = L.latLng(sharedService.searchLat, sharedService.searchLng);
+                var centerPoint  = L.latLng($scope.center.lat, $scope.center.lng);
                 ddlat = feature.geometry.coordinates[1];
                 ddlng = feature.geometry.coordinates[0];
                 var objectPoint = L.latLng(ddlat, ddlng); 
@@ -174,7 +174,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
                //add new Filtered markers
                $scope.markers = addressPointsToMarkers(features); 
                //change map center
-               $scope.init();
+               //$scope.init();
             }); 
             //initialize the map
             $scope.init();
@@ -214,3 +214,92 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                 sharedService.prepForBroadcast("change");
             };
     }]);
+
+    ddController.controller('DensityMapController', [ "$scope", "$http", function($scope, $http) {
+            $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
+                stateMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
+            });
+
+            $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
+                stateClick(leafletPayload.leafletObject, leafletPayload.leafletEvent);
+            });
+
+            angular.extend($scope, {
+                center: {
+                    lat: 39.1232189,
+                    lng: -94.8882723,
+                    zoom: 4
+                },
+                controls: {
+                    fullscreen: {
+                        position: 'topleft'
+                    }
+                },
+                legend: {
+                    colors: [ '#bd0026', '#f03b20', '#fd8d3c', '#fecc5c', '#ffffb2', '#fff' ],
+                    labels: [ '10000', '50000', '1000000', '100000000', '50000000', 'none' ]
+                }
+            });
+            function stateClick(country, event) {
+                country = country.feature;
+                console.log(country.properties.name);
+            }
+
+            // Get a state paint color from 
+            function getColor(density) {
+                if(density < 10000) {
+                    return "#bd0026";
+                }else if (density >= 10000 && density < 50000){
+                    return "#f03b20";
+                }else if (density >= 50000 && density < 1000000){
+                    return "#fd8d3c";
+                }else if (density >= 100000 && density < 10000000){
+                    return "#fecc5c";
+                }else if (density >= 1000000 && density < 500000000){
+                    return "#ffffb2";
+                }
+                return "#FFF";
+            }
+
+            function style(feature) {
+               // console.log("feature: " + feature.properties.name);
+                return {
+                    fillColor: getColor(feature.properties.density),
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            }
+
+            // Mouse over function, called from the Leaflet Map Events
+            function stateMouseover(feature, leafletEvent) {
+                var layer = leafletEvent.target;
+                layer.setStyle({
+                    weight: 2,
+                    color: '#666',
+                    fillColor: 'blue'
+                });
+                layer.bringToFront();
+                $scope.selectedState = feature;
+                if($scope.selectedState.properties.density) {
+                    $scope.selectedState.properties.densityDetail = $scope.selectedState.properties.density + " person have one Donkin's Donuts store";
+                }else {
+                     $scope.selectedState.properties.densityDetail = "No Store in this state";
+                }
+                console.log(feature);
+            }
+
+            // Get the states geojson data from a JSON
+            $http.get("data/us-states.geojson").success(function(data, status) {
+                angular.extend($scope, {
+                    geojson: {
+                        data: data,
+                        style: style,
+                        resetStyleOnMouseout: true
+                    },
+                        selectedState: {}
+                });
+            });
+        }]);
