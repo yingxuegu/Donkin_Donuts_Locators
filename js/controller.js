@@ -156,7 +156,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
             $scope.features = null;
             
             //Load geojson data
-            $http.get("simple.geojson").success(function(data) {
+            $http.get("data/New_England_dd.geojson").success(function(data) {
                 sharedService.features = data.features;
                 $scope.markers = addressPointsToMarkers(sharedService.features);
             });
