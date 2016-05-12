@@ -1,111 +1,61 @@
 <!DOCTYPE html>
-<html ng-app="demoapp">
+<html ng-app="ddLocators">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="bower_components/angular/angular.min.js"></script>
-    <script src="bower_components/leaflet/dist/leaflet.js"></script>
-    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="./img/DD_Coffee.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Donkin's Donuts</title>
+
+     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <!-- Other CSS -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
     <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css" />
+    <link rel="stylesheet" href="bower_components/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="bower_components/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
     <link rel="stylesheet" href="css/density_map.css"/>
-    <script>
-        var app = angular.module("demoapp", ["leaflet-directive"]);
-        app.controller('DensityMapController', [ "$scope", "$http", function($scope, $http) {
-
-            $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
-                stateMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
-            });
-
-            $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
-                stateClick(leafletPayload.leafletObject, leafletPayload.leafletEvent);
-            });
-
-            angular.extend($scope, {
-                center: {
-                    lat: 39.1232189,
-                    lng: -94.8882723,
-                    zoom: 4
-                },
-                legend: {
-                    colors: [ '#bd0026', '#f03b20', '#fd8d3c', '#fecc5c', '#ffffb2', '#fff' ],
-                    labels: [ '10000', '50000', '1000000', '100000000', '50000000', 'none' ]
-                }
-            });
-
-
-
-            function stateClick(country, event) {
-                country = country.feature;
-                console.log(country.properties.name);
-            }
-
-            // Get a state paint color from 
-            function getColor(density) {
-                if(density < 10000) {
-                    return "#bd0026";
-                }else if (density >= 10000 && density < 50000){
-                    return "#f03b20";
-                }else if (density >= 50000 && density < 1000000){
-                    return "#fd8d3c";
-                }else if (density >= 100000 && density < 10000000){
-                    return "#fecc5c";
-                }else if (density >= 1000000 && density < 500000000){
-                    return "#ffffb2";
-                }
-                return "#FFF";
-            }
-
-            function style(feature) {
-               // console.log("feature: " + feature.properties.name);
-                return {
-                    fillColor: getColor(feature.properties.density),
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.7
-                };
-            }
-
-            // Mouse over function, called from the Leaflet Map Events
-            function stateMouseover(feature, leafletEvent) {
-                var layer = leafletEvent.target;
-                layer.setStyle({
-                    weight: 2,
-                    color: '#666',
-                    fillColor: 'blue'
-                });
-                layer.bringToFront();
-                $scope.selectedState = feature;
-                if($scope.selectedState.properties.density) {
-                    $scope.selectedState.properties.densityDetail = $scope.selectedState.properties.density + " person have one Donkin's Donuts store";
-                }else {
-                     $scope.selectedState.properties.densityDetail = "No Store in this state";
-                }
-                console.log(feature);
-            }
-
-            // Get the states geojson data from a JSON
-            $http.get("us-states.geojson").success(function(data, status) {
-                angular.extend($scope, {
-                    geojson: {
-                        data: data,
-                        style: style,
-                        resetStyleOnMouseout: true
-                    },
-                        selectedState: {}
-                });
-            });
-        }]);
-    </script>
- 
   </head>
-  <body ng-controller="DensityMapController">
-      <leaflet lf-center="center" events="events" legend="legend" height="800px" geojson="geojson"></leaflet>
-      <div class="worldmap country f32">
-        <div ng-show="selectedState"></div>
-        {{ selectedState.properties.name || 'No State Name'}}
-        <br>
-        {{ selectedState.properties.densityDetail}}
-      </div>
+  <body> 
+    <div class="row">
+        <div class="menu col-md-3">
+            
+        </div>
+        <div class="content col-md-9">
+            <div ng-controller="MapController" >
+                <leaflet lf-center="center" markers="markers" controls="controls" layers="layers" class="map">                    
+                </leaflet>
+            </div>
+        </div>
+    </div> 
+    <script src="js/jquery.js"></script>
+
+    <!-- Google Maps JavaScript API-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqHFk6cvx0Re65QYLKQvdodgpDqidcnzk">        
+    </script>
+    <!-- Bootstrap Core JavaScript --> 
+    <script src="js/bootstrap.min.js"></script>
+    <!--Angular JavaScript-->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <!--Angular Bootstrap JavaScript-->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <!--Leaflet JavaScript-->
+    <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <script src="bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
+    <script src="bower_components/leaflet-plugins/layer/Icon.Canvas.js"></script>
+    <script src="bower_components/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <!--Core JavaScript-->
+    <script src="js/controller.js"></script>
+    <script src="js/service.js"></script>
+    <script src="js/app.js"></script> 
   </body>
 </html>

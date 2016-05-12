@@ -50,3 +50,22 @@
             line-height: 1.1em;
             text-align: center;
         }
+
+        .wraper {
+            height: 100%;
+        }
+        .menu {
+            height:100vh;
+        }
+        .content {
+            height:100vh;
+        }
+        .map {
+            height:100vh;
+            margin: 0px;       
+        }
+
+
+
+
+

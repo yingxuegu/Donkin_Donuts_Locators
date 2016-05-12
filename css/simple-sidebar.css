@@ -21,11 +21,10 @@
 #sidebar-wrapper {
     z-index: 1000;
     position: fixed;
-    left: 450px;
+    left: 150px;
     width: 0;
     height: 100%;
-    margin-left: -450px;
-    overflow-y: auto;
+    margin-left: -150px;
     background: #F96F0D;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -34,7 +33,7 @@
 }
 
 #wrapper.toggled #sidebar-wrapper {
-    width: 450px;
+    width: 250px;
 }
 
 #page-content-wrapper {
