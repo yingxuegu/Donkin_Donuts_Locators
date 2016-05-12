@@ -24,7 +24,7 @@
     text-indent: 20px;
     text-decoration: none;
     color: #fff;
-    font-size: 18pt;
+    font-size: 14pt;
 }
 
 .sidebar-nav li a:hover {
@@ -36,22 +36,6 @@
 .sidebar-nav li a:active,
 .sidebar-nav li a:focus {
     text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 10pt;
-    line-height: 60px;
-}
-
-.sidebar-nav > .sidebar-brand a {
-    color: #fff;
-    font-size: 14pt;
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
-    background: none;
 }
 
 /*custom css*/
