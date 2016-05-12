@@ -279,7 +279,7 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                 layer.setStyle({
                     weight: 2,
                     color: '#666',
-                    fillColor: 'blue'
+                    fillColor: 'white'
                 });
                 layer.bringToFront();
                 $scope.selectedState = feature;
