@@ -156,7 +156,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
             $scope.features = null;
             
             //Load geojson data
-            $http.get("data/dunkin_donuts_valued.geojson").success(function(data) {
+            $http.get("simple.geojson").success(function(data) {
                 sharedService.features = data.features;
                 $scope.markers = addressPointsToMarkers(sharedService.features);
             });
