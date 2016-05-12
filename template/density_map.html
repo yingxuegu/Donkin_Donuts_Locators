@@ -1,7 +1,9 @@
-<div ng-controller="DensityMapController">
-      <leaflet lf-center="center" events="events" controls="controls" legend="legend" height="90vh" geojson="geojson"></leaflet>
+<div ng-controller="DensityMapController" class="mm">
+      <leaflet lf-center="center" events="events" controls="controls" legend="legend" height="100vh" geojson="geojson"></leaflet>
       <div class="worldmap country f32">
         <div ng-show="selectedState"></div>
+        <p>Density Map</p>
+        <p>Hover over a state</p>
         {{ selectedState.properties.name || 'No State Name'}}
         <br>
         {{ selectedState.properties.densityDetail}}

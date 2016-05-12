@@ -29,98 +29,89 @@
     <![endif]-->
 </head>
 <body>
-    <div id="wrapper">
+    <div>
         <!-- Sidebar -->
-        <div id="sidebar-wrapper" class="container">
-            <ul class="sidebar-nav" >
-                <li class="sidebar-brand">
-                    <a href="#">
-                        Donkin's Donuts Locators
-                    </a>
-                </li>
-                <div ng-controller="SearchController" class="row">
-                    <li class="search" ng-click="isCollapsed = !isCollapsed">
-                        <a href="#/">Search</a>
+            <div id="sidebar-wrapper" class="container">
+                <ul class="sidebar-nav" >
+                    <li class="sidebar-brand">
+                        <a href="#/">
+                            Donkin's Donuts Locators
+                        </a>
                     </li>
-                    <div uib-collapse="isCollapsed" class="col-md-12 col-lg-12 search_panel">
-                      <div class="row">  
-                        <div class="col-md-12 col-lg-12">
-                            <div class="input-group">
-                              <input type="text" class="form-control" placeholder="Input Zip Code" ng-model="address">
-                              <span class="input-group-btn">
-                                <button class="btn btn-success" type="button" ng-click="search()">Search</button>
-                              </span>
-                            </div><!-- /input-group -->
-                        </div>
-                     </div><!-- /row -->   
+                    <div ng-controller="SearchController" class="row">
+                        <li class="search" ng-click="isCollapsed = !isCollapsed">
+                            <a href="#/">Search</a>
+                        </li>
+                        <div uib-collapse="isCollapsed" class="col-md-12 col-lg-12 search_panel">
+                          <div class="row">  
+                            <div class="col-md-12 col-lg-12">
+                                <div class="input-group">
+                                  <input type="text" class="form-control" placeholder="Input Zip Code" ng-model="address">
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-success" type="button" ng-click="search()">Search</button>
+                                  </span>
+                                </div><!-- /input-group -->
+                            </div>
+                         </div><!-- /row -->   
 
-                     <br>
-                        <!--drop down for distance-->
-                      <div class="row">  
-                        <div class="dropdown col-md-12  col-lg-12">
-                            <label for="singleSelect">Select Distance: </label>
-                            <br> 
-                               <select name="singleSelect" ng-model="radius" ng-change="selectDistance()">
-                                  <option value=10>10</option>
-                                  <option value=20>20</option>
-                                  <option value=50>50</option>
-                                  <option value=100>100</option>
-                                  <option value=10000 selected="selected">Unlimited</option>
-                                </select>
-                            <br>                        
-                        </div><!-- /dropdown -->      
-                      </div> <!-- /row --> 
-
-                       
-
-
-                     <br> 
-                      <!-- Only Show Restaurants with -->                        
-                      <div class="row col-md-12  col-lg-12">
-                        <div >
-                          <label class="style">Only Show Restaurants with</label>
+                         <br>
+                            <!--drop down for distance-->
+                          <div class="row">  
+                            <div class="dropdown col-md-12  col-lg-12">
+                                <label for="singleSelect">Select Distance: </label>
+                                <br> 
+                                   <select name="singleSelect" ng-model="radius" ng-change="selectDistance()">
+                                      <option value=10>10</option>
+                                      <option value=20>20</option>
+                                      <option value=50>50</option>
+                                      <option value=100>100</option>
+                                      <option value=10000 selected="selected">Unlimited</option>
+                                    </select>
+                                <br>                        
+                            </div><!-- /dropdown -->      
+                          </div> <!-- /row --> 
+                         <br> 
+                          <!-- Only Show Restaurants with -->                        
+                          <div class="row col-md-12  col-lg-12">
+                            <div >
+                              <label class="style">Only Show Restaurants with</label>
+                            </div>
+                            <div class="checkbox">
+                              <label class="style">
+                                <input type="checkbox" ng-model="wifiConfirmed" ng-change=featureChanged()>
+                                Wifi
+                              </label>
+                            </div>
+                            <div class="checkbox">
+                              <label class="style"><input type="checkbox" ng-model="drivethroughConfirmed" ng-change=featureChanged()>Drive Through</label>
+                            </div>
+                            <div class="checkbox">
+                              <label class="style"><input type="checkbox" ng-model="fulldayConfirmed" ng-change=featureChanged()>24 Hours</label>
+                            </div>
+                            <div class="checkbox">
+                              <label class="style"><input type="checkbox" ng-model="fullmenuConfirmed" ng-change=featureChanged()>Full Menu</label>
+                            </div>
+                          </div> 
                         </div>
-                        <div class="checkbox">
-                          <label class="style">
-                            <input type="checkbox" ng-model="wifiConfirmed" ng-change=featureChanged()>
-                            Wifi
-                          </label>
-                        </div>
-                        <div class="checkbox">
-                          <label class="style"><input type="checkbox" ng-model="drivethroughConfirmed" ng-change=featureChanged()>Drive Through</label>
-                        </div>
-                        <div class="checkbox">
-                          <label class="style"><input type="checkbox" ng-model="fulldayConfirmed" ng-change=featureChanged()>24 Hours</label>
-                        </div>
-                        <div class="checkbox">
-                          <label class="style"><input type="checkbox" ng-model="fullmenuConfirmed" ng-change=featureChanged()>Full Menu</label>
-                        </div>
-                      </div> 
                     </div>
-                </div>
-                <li>
-                    <a href="#/density">Interactive Density Map</a>
-                </li>
-                <li>
-                    <a href="#">Hot Spot Map</a>
-                </li>
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
-            </ul>
-            
-        </div>
-        <!-- /#sidebar-wrapper -->
+                    <li>
+                        <a href="#/density">Interactive Density Map</a>
+                    </li>
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>
+                </ul>
+                
+            </div>
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
+   
             <div class="container-fluid">
                     <div ng-view></div> 
-                </div>
             </div>
+
         </div>
         <!-- /#page-content-wrapper -->
 
