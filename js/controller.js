@@ -11,7 +11,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
         }, "jsonp");
     //render icon for each Donkin's Donuts store
     var ddIcon = {
-            iconUrl: 'img/DD_Store.jpeg',
+            iconUrl: 'img/DD_Store.png',
             iconSize: [40, 40], // size of the icon
         };
     //geocoding by Google api
