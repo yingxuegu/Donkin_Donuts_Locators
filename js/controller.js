@@ -27,8 +27,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
              alert('Geocode was not successful for the following reason: ' + status);
             }
         });
-    };
-                
+    };               
     //give each point a popup    
     var addressPointsToMarkers = function(points) { 
         return points.map(function(ap) {
@@ -215,6 +214,7 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
             $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
                 stateMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
             });
+            //initialize the map and legend
             angular.extend($scope, {
                 center: {
                     lat: 39.1232189,

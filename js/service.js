@@ -1,5 +1,5 @@
 var ddService = angular.module('ddService', []);
-    
+//This service is used to share data and communicate between MapController and Service Controller.    
 ddService.factory('mySharedService', function($rootScope) {
     var sharedService = {};
     sharedService.wifi = false;
