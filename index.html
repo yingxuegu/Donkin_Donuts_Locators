@@ -91,15 +91,22 @@
                           </div> 
                         </div>
                     </div>
+
                     <li>
                         <a href="#/density">Interactive Density Map</a>
                     </li>
                     <li>
                         <a href="#">About</a>
                     </li>
-                    <li>
-                        <a href="#">Contact</a>
+                    <li ng-click="isContactCollapsed = !isContactCollapsed">
+                        <a href="#/">Contact</a>
                     </li>
+                    <div ng-show="isContactCollapsed" class="contact">
+                        <div>
+                            <p>Author: Xueying Gu</p>
+                            <p>Email: xgujavascript@gmail.com</p>
+                        </div>
+                    </div>
                 </ul>
                 
             </div>

@@ -64,6 +64,15 @@
             height:100vh;
             margin: 0px;       
         }
+        .state-name{
+            color: blue;
+        }
+        .hover-map{
+            color: red;
+        }
+        .person-density{
+            color: green;
+        }
 
 
 

@@ -185,6 +185,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
 ddController.controller('SearchController', ["$scope", "$http", "mySharedService", 
         function($scope, $http, sharedService){
             $scope.isCollapsed = true;
+            $scope.isContactCollapsed = true;
             $scope.address = "";
             $scope.radius = 10000;
             $scope.wifiConfirmed = false;
@@ -284,7 +285,7 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                 layer.bringToFront();
                 $scope.selectedState = feature;
                 if($scope.selectedState.properties.density) {
-                    $scope.selectedState.properties.densityDetail = $scope.selectedState.properties.density + " person have one Donkin's Donuts store";
+                    $scope.densityText = " person have one Donkin's Donuts store";
                 }else {
                      $scope.selectedState.properties.densityDetail = "No Store in this state";
                 }

@@ -3,9 +3,9 @@
       <div class="worldmap country f32">
         <div ng-show="selectedState"></div>
         <p>Density Map</p>
-        <p>Hover over a state</p>
-        {{ selectedState.properties.name || 'No State Name'}}
-        <br>
-        {{ selectedState.properties.densityDetail}}
+        <p class="hover-map">Hover over a state</p>
+        <p class="state-name">{{ selectedState.properties.name || 'No State Name'}}<p>
+        <p ng-show=selectedState.properties.density><span class="person-density">{{ selectedState.properties.density}}</span>{{densityText}}</p>
+        <p ng-show=!selectedState.properties.density>{{selectedState.properties.densityDetail}}</p>
       </div>
  </div>
