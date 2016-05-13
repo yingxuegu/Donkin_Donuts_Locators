@@ -73,14 +73,7 @@ ddController.controller("MapController", [ "$scope", "$http", "mySharedService",
             $http.get(url).success(function(res) {
             $scope.center.lng = res.longitude;
             $scope.center.lat = res.latitude;
-            //after get the address of client, then reload
-            //$scope.init();
             });
-        };
-
-        $scope.changeLocation = function() {
-                $scope.center.lat = 45;
-                $scope.center.lng = 10;
         };
         //initialize map 
         $scope.init = function() {
@@ -215,16 +208,13 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                 sharedService.prepForBroadcast("change");
             };
     }]);
-
+    
+    /*This Controller is used to controll interactive actions and rendering style for the density map*/
     ddController.controller('DensityMapController', [ "$scope", "$http", function($scope, $http) {
+            //A listener for mouse over event
             $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
                 stateMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
             });
-
-            $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
-                stateClick(leafletPayload.leafletObject, leafletPayload.leafletEvent);
-            });
-
             angular.extend($scope, {
                 center: {
                     lat: 39.1232189,
@@ -241,11 +231,6 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                     labels: [ '10000', '50000', '1000000', '100000000', '50000000', 'none' ]
                 }
             });
-            function stateClick(country, event) {
-                country = country.feature;
-                console.log(country.properties.name);
-            }
-
             // Get a state paint color from 
             function getColor(density) {
                 if(density < 10000) {
@@ -261,9 +246,8 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                 }
                 return "#FFF";
             }
-
+            //Set the rendering style for each state based on density
             function style(feature) {
-               // console.log("feature: " + feature.properties.name);
                 return {
                     fillColor: getColor(feature.properties.density),
                     weight: 2,
@@ -273,7 +257,6 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                     fillOpacity: 0.7
                 };
             }
-
             // Mouse over function, called from the Leaflet Map Events
             function stateMouseover(feature, leafletEvent) {
                 var layer = leafletEvent.target;
@@ -289,9 +272,7 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                 }else {
                      $scope.selectedState.properties.densityDetail = "No Store in this state";
                 }
-                console.log(feature);
             }
-
             // Get the states geojson data from a JSON
             $http.get("data/us-states.geojson").success(function(data, status) {
                 angular.extend($scope, {
@@ -300,7 +281,7 @@ ddController.controller('SearchController', ["$scope", "$http", "mySharedService
                         style: style,
                         resetStyleOnMouseout: true
                     },
-                        selectedState: {}
+                    selectedState: {}
                 });
             });
         }]);
