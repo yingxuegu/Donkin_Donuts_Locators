@@ -5,11 +5,13 @@ var ddController = angular.module('ddCtrl', []);
 */
 ddController.controller("MapController", [ "$scope", "$http", "mySharedService", function($scope, $http, sharedService) {
     //get ip address
-    $.get("http://ipinfo.io", function(response) {
-        $scope.ip = response.ip;
-        $scope.searchIP($scope.ip);
-        }, "jsonp");
+    // $.get("http://ipinfo.io", function(response) {
+    //     $scope.ip = response.ip;
+    //     $scope.searchIP($scope.ip);
+    //     }, "jsonp");
     //render icon for each Donkin's Donuts store
+    $scope.center.lng = -70.2606167;
+    $scope.center.lat = 43.6566628;
     var ddIcon = {
             iconUrl: 'img/DD_Store.png',
             iconSize: [40, 40], // size of the icon
